@@ -21,12 +21,14 @@ class App extends Component {
   }
 
   getACard = () => {
-    let randomCard = Math.floor(Math.random() * 52);
+    let randomKartenBlock = Math.floor(Math.random() * 4);
+    let randomCard = Math.floor(Math.random() * 13);
+
     let uebungen = ["sit-up", "liegestuetze", "squat", "suspension", "burpee"];
     let randomUebung = Math.floor(Math.random() * 5);
 
     this.setState({
-      card: this.state.stappel[randomCard],
+      card: this.state.stappel[randomKartenBlock][randomCard],
       uebung: uebungen[randomUebung]
     });
   };
@@ -39,44 +41,46 @@ class App extends Component {
       <img src={Herz} alt="card" />,
       <img src={Pik} alt="card" />
     ];
+
     let figIndex = 0;
-    let figNumberIndex = 1; //für die jeweilige Gruppennummerierungen
+    let kartBlock = [];
 
-    for (let i = 1; i < 53; i++) {
-      if (i % 11 === 0) {
-        stappel.push(
-          <Karte key={i} setWert={"J"} setFigur={figuren[figIndex]} />
-        );
-      } else if (i % 12 === 0) {
-        stappel.push(
-          <Karte key={i} setWert={"Q"} setFigur={figuren[figIndex]} />
-        );
-      } else if (i % 13 === 0) {
-        stappel.push(
-          <Karte key={i} setWert={"K"} setFigur={figuren[figIndex]} />
-        );
-      } else {
-        stappel.push(
-          <Karte
-            key={i}
-            setWert={figNumberIndex}
-            setFigur={figuren[figIndex]}
-          />
-        );
+    for (let k = 0; k < 4; k++) {
+      for (let i = 0; i < 13; i++) {
+        if (i === 0) {
+          kartBlock.push(
+            <Karte key={i} setWert={"A"} setFigur={figuren[figIndex]} />
+          );
+        } else if (i % 10 === 0) {
+          kartBlock.push(
+            <Karte key={i} setWert={"Q"} setFigur={figuren[figIndex]} />
+          );
+        } else if (i % 11 === 0) {
+          kartBlock.push(
+            <Karte key={i} setWert={"J"} setFigur={figuren[figIndex]} />
+          );
+        } else if (i % 12 === 0) {
+          kartBlock.push(
+            <Karte key={i} setWert={"K"} setFigur={figuren[figIndex]} />
+          );
+        } else {
+          kartBlock.push(
+            <Karte key={i} setWert={i} setFigur={figuren[figIndex]} />
+          );
+        }
       }
-      figNumberIndex += 1;
-
-      if (i % 13 === 0) {
-        figIndex += 1;
-        figNumberIndex = 1;
-      }
+      stappel.push(kartBlock);
+      figIndex += 1;
+      kartBlock = [];
     }
+    console.log(stappel);
     return stappel;
   };
 
   render() {
     return (
       <div className="App container">
+        <h1>Übungskarten :D</h1>
         <Button variant="contained" color="primary" onClick={this.getACard}>
           Zieh ne Karte für eine Übung!
         </Button>
